@@ -1,0 +1,34 @@
+﻿# Maven
+target/
+*.jar
+*.war
+*.class
+
+# Node
+node_modules/
+recommend-ui/node_modules/
+recommend-ui/dist/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Env
+.env
+.env.local
+
+# Vite cache
+recommend-ui/node_modules/.vite/

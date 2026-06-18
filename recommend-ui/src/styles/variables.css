@@ -1,0 +1,43 @@
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #101624;
+  --bg-panel: rgba(16, 22, 36, 0.6);
+  --border-color: rgba(56, 189, 248, 0.12);
+  --border-glow: rgba(56, 189, 248, 0.3);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.5);
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --gradient-blue: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  --gradient-panel: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+  --radius: 12px;
+  --gap: 16px;
+  --color-kafka: #14b8a6;
+  --color-flink: #8b5cf6;
+  --color-redis: #f59e0b;
+  --color-hot: #ec4899;
+  --color-events: #06b6d4;
+  --color-health: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow: auto; }
+
+body {
+  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(ellipse at 20% 50%, rgba(56,189,248,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 30%, rgba(14,165,233,0.04) 0%, transparent 50%);
+}
+
+#app { height: 100%; display: flex; flex-direction: column; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.25); border-radius: 2px; }
