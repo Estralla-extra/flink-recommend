@@ -29,19 +29,14 @@ public class AnalyticsController {
 
             List<String> order = Arrays.asList("pv", "cart", "fav", "buy");
             List<Map<String, Object>> steps = new ArrayList<>();
-            long prevCount = Long.MAX_VALUE;
-            for (String behavior : order) {
+                        for (String behavior : order) {
                 String val = raw.get(behavior);
                 if (val == null) continue;
                 long count = Long.parseLong(val);
-                double rate = prevCount == Long.MAX_VALUE ? 100.0
-                        : (prevCount > 0 ? (count * 100.0 / prevCount) : 0);
                 Map<String, Object> step = new LinkedHashMap<>();
                 step.put("behavior", behavior);
                 step.put("count", count);
-                step.put("rate", Math.round(rate * 10.0) / 10.0);
                 steps.add(step);
-                prevCount = count;
             }
             result.put("hour", hour);
             result.put("steps", steps);

@@ -117,9 +117,10 @@ public class RealtimeRecommendJob {
                     jedis.ltrim("recent:events", 0, 49);
                     String[] parts = line.split(",");
                     if (parts.length >= 5) {
-                        jedis.incr("counter:events");
-                        jedis.hincrBy("counter:behavior", parts[3], 1);
-                        jedis.pfadd("counter:users", parts[0]);
+                        String dt = new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date());
+                        jedis.incr("counter:events:" + dt);
+                        jedis.hincrBy("counter:behavior:" + dt, parts[3], 1);
+                        jedis.pfadd("counter:users:" + dt, parts[0]);
                     }
                 }
             }
@@ -177,6 +178,7 @@ public class RealtimeRecommendJob {
                 String cacheKey = "recommend:user:" + userId;
                 jedis.setex(cacheKey, 900, String.join(",", topItems));
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                System.out.println("Cached: " + cacheKey + " -> " + String.join(",", topItems) + " at " + sdf.format(new java.util.Date()));
             } catch (Exception e) {}
         }
     }
@@ -204,7 +206,7 @@ public class RealtimeRecommendJob {
             List<HourlyBucket> buckets = new ArrayList<>(); input.forEach(buckets::add); if (buckets.isEmpty()) return;
             HourlyBucket first = buckets.get(0);
             Map<String, Integer> behaviorCount = new HashMap<>();
-            for (HourlyBucket b : buckets) { behaviorCount.merge(b.behavior, 1, Integer::sum); }
+            for (HourlyBucket b : buckets) { if (!b.userId.startsWith("heartbeat")) behaviorCount.merge(b.behavior, 1, Integer::sum); }
             try (Jedis jedis = pool.getResource()) {
                 for (Map.Entry<String, Integer> e : behaviorCount.entrySet()) {
                     jedis.hincrBy("funnel:" + first.hourKey, e.getKey(), e.getValue());

@@ -15,65 +15,55 @@ function render() {
 
   const width = el.clientWidth
   const height = el.clientHeight
-  const margin = { t: 16, b: 24, l: 16, r: 16 }
+  const margin = { t: 16, b: 16, l: 48, r: 48 }
+  const innerW = width - margin.l - margin.r
+  const innerH = height - margin.t - margin.b
 
   const data = props.steps
   const maxVal = d3.max(data, d => d.count) || 1
+  const bandH = innerH / data.length
+  const colors = ['#06b6d4','#f59e0b','#8b5cf6','#34d399']
 
-  const barW = Math.max(24, (width - margin.l - margin.r) / data.length - 8)
-  const xScale = d3.scaleBand().domain(data.map(d => d.behavior)).range([margin.l, width - margin.r]).padding(0.25)
-  const yScale = d3.scaleLinear().domain([0, maxVal * 1.2]).range([height - margin.b, margin.t])
-
-  const colors = d3.scaleOrdinal<string>().domain(['pv','cart','fav','buy']).range(['#06b6d4','#f59e0b','#8b5cf6','#34d399'])
-
-  // Bars with funnel width reduction
   data.forEach((d, i) => {
-    const x = xScale(d.behavior)!
-    const y = yScale(d.count)
-    const w = xScale.bandwidth() * (1 - i * 0.08)
-    const cx = x + xScale.bandwidth() / 2
+    const y = margin.t + i * bandH
+    const barH = bandH * 0.7
+    const barW = (d.count / maxVal) * innerW
+    const cx = margin.l + innerW / 2
 
+    // Bar
     svg.append('rect')
-      .attr('x', cx - w / 2)
-      .attr('y', y)
-      .attr('width', w)
-      .attr('height', yScale(0) - y)
-      .attr('fill', colors(d.behavior))
-      .attr('rx', 3)
-      .attr('opacity', 0.85)
+      .attr('x', cx - barW / 2).attr('y', y + (bandH - barH) / 2)
+      .attr('width', barW).attr('height', barH)
+      .attr('fill', colors[i % colors.length])
+      .attr('opacity', 0.85).attr('rx', 2)
 
-    svg.append('text')
-      .attr('x', cx)
-      .attr('y', y - 8)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#e2e8f0')
-      .attr('font-size', '11')
-      .attr('font-weight', '600')
-      .text(d.count)
-
-    // rate arrow line
-    if (i > 0) {
-      const prevY = yScale(data[i - 1].count)
-      svg.append('text')
-        .attr('x', cx)
-        .attr('y', (y + prevY) / 2)
-        .attr('text-anchor', 'middle')
-        .attr('fill', '#94a3b8')
-        .attr('font-size', '10')
-        .text(`${d.rate}%`)
+    // Connecting trapezoid
+    if (i < data.length - 1) {
+      const nextW = (data[i + 1].count / maxVal) * innerW
+      const nextY = margin.t + (i + 1) * bandH
+      svg.append('polygon')
+        .attr('points', [
+          [cx - barW / 2, y + (bandH - barH) / 2 + barH],
+          [cx + barW / 2, y + (bandH - barH) / 2 + barH],
+          [cx + nextW / 2, nextY + (bandH - barH) / 2],
+          [cx - nextW / 2, nextY + (bandH - barH) / 2],
+        ].map(p => p.join(',')).join(' '))
+        .attr('fill', colors[i % colors.length]).attr('opacity', 0.12)
     }
-  })
 
-  // Axis labels
-  data.forEach(d => {
-    const x = xScale(d.behavior)!
+    // Behavior label (left)
     svg.append('text')
-      .attr('x', x + xScale.bandwidth() / 2)
-      .attr('y', height - 4)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#94a3b8')
-      .attr('font-size', '11')
+      .attr('x', margin.l - 8).attr('y', y + bandH / 2)
+      .attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+      .attr('fill', '#94a3b8').attr('font-size', '11').attr('font-weight', '600')
       .text(d.behavior.toUpperCase())
+
+    // Count (inside bar)
+    svg.append('text')
+      .attr('x', cx).attr('y', y + bandH / 2)
+      .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
+      .attr('fill', '#fff').attr('font-size', '14').attr('font-weight', '700')
+      .text(d.count)
   })
 }
 

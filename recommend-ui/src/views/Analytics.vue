@@ -9,7 +9,7 @@ import CategoryPie from "@/components/charts/CategoryPie.vue"
 const now = new Date()
 const currentHour = now.getFullYear().toString() +
   String(now.getMonth() + 1).padStart(2, '0') +
-  String(now.getDate()).padStart(2, '0') + '00'
+  String(now.getDate()).padStart(2, '0') + String(now.getHours()).padStart(2, '0')
 const today = now.getFullYear().toString() +
   String(now.getMonth() + 1).padStart(2, '0') +
   String(now.getDate()).padStart(2, '0')
@@ -45,7 +45,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
   <div class="analytics-page">
     <div class="an-header">
       <h2>深度分析</h2>
-      <p class="an-sub">小时热力图 · 转化漏斗 · 品类分布</p>
+      <p class="an-sub">小时热力图 · 环节事件数对比 · 品类分布</p>
     </div>
 
     <div class="heatmap-section">
@@ -58,7 +58,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
 
     <div class="bottom-grid">
       <div class="an-card funnel-card">
-        <h3>转化漏斗 ({{ currentHour.slice(-2) }}:00)</h3>
+        <h3>环节事件数对比 ({{ currentHour.slice(-2) }}:00)</h3>
         <div class="chart-wrapper">
           <FunnelChart v-if="!loading && funnelSteps.length" :steps="funnelSteps" />
           <div v-else-if="!loading" class="chart-placeholder">

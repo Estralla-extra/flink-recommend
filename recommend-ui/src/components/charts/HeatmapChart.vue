@@ -65,22 +65,24 @@ function render() {
       const x = margin.l + col * cellW
       const y = margin.t + row * cellH
 
-      svg.append('rect')
+      const hdTotal = hd ? hd.total || 0 : 0
+        const cellFill = val > 0 ? colorScale(val) : (hdTotal > 0 ? 'rgba(30,41,59,0.35)' : 'rgba(30,41,59,0.12)')
+        svg.append('rect')
         .attr('x', x).attr('y', y)
         .attr('width', cellW - 1).attr('height', cellH - 1)
-        .attr('fill', val > 0 ? colorScale(val) : 'rgba(30,41,59,0.4)')
+        .attr('fill', cellFill)
         .attr('rx', 1)
 
       // Value label (only if cell is wide enough)
-      if (cellW > 28 && val > 0) {
+      if (val > 0) {
         svg.append('text')
           .attr('x', x + (cellW - 1) / 2)
           .attr('y', y + (cellH - 1) / 2)
           .attr('text-anchor', 'middle')
           .attr('dominant-baseline', 'middle')
           .attr('fill', val > maxV * 0.5 ? '#fff' : '#e2e8f0')
-          .attr('font-size', '9').attr('font-weight', '600')
-          .text(val > 999 ? '999+' : val.toString())
+          .attr('font-size', '11').attr('font-weight', '700').attr('style', 'text-shadow:0 1px 3px rgba(0,0,0,0.8)')
+          .text(val > 9999 ? Math.round(val / 1000) + 'k' : val.toString())
       }
 
       svg.append('title').text(`${h}:00 ${b.toUpperCase()} = ${val}`)
@@ -98,14 +100,13 @@ function render() {
       .text(b.toUpperCase())
   })
 
-  // X axis labels (every 2 hours)
+  // X axis labels (every hour)
   hours.forEach((h, i) => {
-    if (parseInt(h) % 2 !== 0) return
     svg.append('text')
       .attr('x', margin.l + i * cellW + cellW / 2)
-      .attr('y', height - 6)
+      .attr('y', height - 4)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#64748b').attr('font-size', '9')
+      .attr('fill', '#64748b').attr('font-size', '7')
       .text(`${h}:00`)
   })
 }

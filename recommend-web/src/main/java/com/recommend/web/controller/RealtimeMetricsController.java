@@ -18,10 +18,10 @@ public class RealtimeMetricsController {
     public Map<String, Object> getRealtime() {
         Map<String, Object> result = new LinkedHashMap<>();
         try (Jedis jedis = jedisPool.getResource()) {
-            String ev = jedis.get("counter:events");
+            String ev = jedis.get("counter:events:" + new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date()));
             long events = ev != null ? Long.parseLong(ev) : 0;
-            long users = jedis.pfcount("counter:users");
-            Map<String, String> bhv = jedis.hgetAll("counter:behavior");
+            long users = jedis.pfcount("counter:users:" + new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date()));
+            Map<String, String> bhv = jedis.hgetAll("counter:behavior:" + new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date()));
             long pv = Long.parseLong(bhv.getOrDefault("pv", "0"));
             long buy = Long.parseLong(bhv.getOrDefault("buy", "0"));
             long cart = Long.parseLong(bhv.getOrDefault("cart", "0"));

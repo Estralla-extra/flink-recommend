@@ -26,7 +26,7 @@ function render() {
   const yScale = d3.scaleBand()
     .domain(data.map((_, i) => i.toString()))
     .range([0, innerH])
-    .padding(0.2)
+    .padding(0.35)
 
   const xScale = d3.scaleLinear()
     .domain([0, maxVal * 1.1])
@@ -44,6 +44,19 @@ function render() {
       .attr('width', 0).attr('height', barH)
       .attr('fill', colors(String(i)))
       .attr('rx', 2).attr('opacity', 0.8)
+      .on('mouseenter', function () {
+        d3.select(this).attr('opacity', 1).attr('stroke', '#fff').attr('stroke-width', 1)
+        svg.select('#ctip').remove()
+        svg.append('text').attr('id', 'ctip')
+          .attr('x', width / 2).attr('y', 14)
+          .attr('text-anchor', 'middle')
+          .attr('fill', '#38bdf8').attr('font-size', '12').attr('font-weight', '600')
+          .text(d.categoryId + ' - ' + d.count + ' events')
+      })
+      .on('mouseleave', function () {
+        d3.select(this).attr('opacity', 0.8).attr('stroke', 'none')
+        svg.select('#ctip').remove()
+      })
       .transition().duration(500).ease(d3.easeCubicOut)
       .attr('width', barW)
 
@@ -51,7 +64,7 @@ function render() {
       .attr('x', 4).attr('y', y + barH / 2)
       .attr('dominant-baseline', 'middle')
       .attr('fill', '#e2e8f0').attr('font-size', '10')
-      .text(`品类 ${d.categoryId.slice(-4)}`)
+      .text(`品类 ${d.categoryId}`)
 
     g.append('text')
       .attr('x', innerW).attr('y', y + barH / 2)
