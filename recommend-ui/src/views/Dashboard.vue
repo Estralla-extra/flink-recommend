@@ -74,7 +74,7 @@ onUnmounted(() => {
 .kpi-col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0; }
 .kpi-card { flex: 1; background: rgba(16,22,36,0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; min-width: 0; }
 .kpi-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; }
-.kpi-val { font-size: 22px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kpi-val { font-size: 22px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; font-family: Consolas, monospace; text-shadow: 0 0 10px rgba(56,189,248,0.4), 0 0 30px rgba(56,189,248,0.1); }
 .dashboard-grid { flex: 1; display: grid; grid-template-columns: 1fr 2.2fr 1fr; grid-template-rows: minmax(240px, 1fr) minmax(220px, 1fr); gap: 12px; padding: 12px 16px 16px; position: relative; z-index: 1; overflow: visible; }
 .cell-kafka   { grid-row: 1; grid-column: 1; }
 .cell-sankey  { grid-row: 1; grid-column: 2; }
