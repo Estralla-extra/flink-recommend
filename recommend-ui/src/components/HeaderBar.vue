@@ -17,6 +17,7 @@ const currentPath = computed(() => route.path)
 const navItems = [
   { path: '/dashboard', label: '监控大屏', icon: 'chart' },
   { path: '/recommend', label: '用户推荐', icon: 'user' },
+  { path: '/item-recommend', label: '商品推荐', icon: 'cart' },
   { path: '/analytics', label: '深度分析', icon: 'activity' },
 ]
 

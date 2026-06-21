@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 
 interface Particle {
-  x: number; y: number; vx: number; vy: number; r: number; alpha: number; da: number
+  x: number; y: number; ox: number; oy: number; vx: number; vy: number; r: number; alpha: number; da: number
 }
 
 let particles: Particle[] = []

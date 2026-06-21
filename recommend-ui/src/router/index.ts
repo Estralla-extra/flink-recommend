@@ -26,6 +26,11 @@ const routes = [
     component: () => import('@/views/Recommend.vue'),
   },
   {
+    path: '/item-recommend',
+    name: 'ItemRecommend',
+    component: () => import('@/views/ItemRecommend.vue'),
+  },
+  {
     path: '/analytics',
     name: 'Analytics',
     component: () => import('@/views/Analytics.vue'),

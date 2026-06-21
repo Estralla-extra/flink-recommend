@@ -10,7 +10,6 @@ import RecommendSankeyPanel from "@/components/RecommendSankeyPanel.vue"
 import Top5Panel from "@/components/Top5Panel.vue"
 import FlinkMetricsPanel from "@/components/FlinkMetricsPanel.vue"
 import RedisPanel from "@/components/RedisPanel.vue"
-import ParticleBg from "@/components/ParticleBg.vue"
 
 const eventsStore = useEventsStore()
 const metricsStore = useMetricsStore()
@@ -45,7 +44,7 @@ onUnmounted(() => {
 
 <template>
   <div class="dashboard-page">
-    <ParticleBg />
+
 
   <div class="kpi-row">
     <div class="kpi-card"><span class="kpi-label">今日事件</span><span class="kpi-val">{{ kpi.events_today.toLocaleString() }}</span></div>

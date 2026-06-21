@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import HeaderBar from '@/components/HeaderBar.vue'
 import BottomMarquee from '@/components/BottomMarquee.vue'
+import ParticleBg from '@/components/ParticleBg.vue'
 import { useEventsStore } from '@/stores/events'
 import { useMetricsStore } from '@/stores/metrics'
 
@@ -14,7 +15,7 @@ const isAuthPage = () => ['/login', '/register'].includes(router.currentRoute.va
 </script>
 
 <template>
-  <div class="app-layout">
+  <ParticleBg /><div class="app-layout">
     <template v-if="isAuthPage()">
       <router-view />
     </template>

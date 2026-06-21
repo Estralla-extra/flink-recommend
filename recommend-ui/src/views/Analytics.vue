@@ -44,8 +44,11 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
 <template>
   <div class="analytics-page">
     <div class="an-header">
-      <h2>深度分析</h2>
-      <p class="an-sub">小时热力图 · 环节事件数对比 · 品类分布</p>
+      <div class="an-breadcrumb">
+        <span class="an-breadcrumb-item">深度分析</span>
+        <span class="an-breadcrumb-sep">/</span>
+        <span class="an-breadcrumb-item muted">小时热力图 · 环节事件数对比 · 品类分布</span>
+      </div>
     </div>
 
     <div class="heatmap-section">
@@ -81,9 +84,12 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
 
 <style scoped>
 .analytics-page { flex: 1; overflow-y: auto; padding: 20px 32px; display: flex; flex-direction: column; gap: 16px; }
-.an-header h2 { font-size: 22px; font-weight: 700; color: var(--text-primary); }
-.an-sub { font-size: 13px; color: var(--text-muted); }
-.section-title { font-size: 14px; font-weight: 600; padding-left: 10px; border-left: 3px solid var(--accent); flex-shrink: 0; }
+.an-header { display: flex; align-items: center; }
+.an-breadcrumb { display: flex; align-items: baseline; gap: 6px; }
+.an-breadcrumb-item { font-size: 20px; font-weight: 700; background: var(--gradient-blue); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.an-breadcrumb-item.muted { font-size: 11px; -webkit-text-fill-color: var(--text-muted); background: none; font-weight: 400; opacity: 0.5; }
+.an-breadcrumb-sep { color: var(--text-muted); opacity: 0.2; font-size: 12px; }
+.an-sub { font-size: 12px; color: var(--text-muted); opacity: 0.6; }
 .section-title.accent { color: #a78bfa; border-color: #a78bfa; }
 .heatmap-section { flex: 0 0 60vh; min-height: 320px; background: rgba(16,22,36,0.8); border: 1px solid rgba(139,92,246,0.35); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 0 20px rgba(139,92,246,0.06); }
 .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex-shrink: 0; min-height: 480px; }
