@@ -63,7 +63,7 @@ function render() {
       .attr('x', cx).attr('y', y + bandH / 2)
       .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
       .attr('fill', '#fff').attr('font-size', '14').attr('font-weight', '700')
-      .text(d.count)
+      .attr('class','on').text(d.count)
   })
 }
 

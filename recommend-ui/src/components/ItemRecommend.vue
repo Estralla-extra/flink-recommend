@@ -43,7 +43,7 @@ async function search() {
       <div v-for="(item, i) in realtimeList" :key="i" class="ir-row-item">
         <span class="ri-rank">{{ i+1 }}</span>
         <span class="ri-id">{{ item.itemId }}</span>
-        <span class="ri-score">{{ item.score.toFixed(2) }}</span>
+        <span class="ri-score on">{{ item.score.toFixed(2) }}</span>
       </div>
       <div v-if="!realtimeList.length" class="ri-empty">暂无推荐数据</div>
 
@@ -83,7 +83,7 @@ async function search() {
 .ir-row-item { display:flex; align-items:center; gap:12px; padding:10px 12px; background:rgba(56,189,248,0.04); border-radius:6px; }
 .ri-rank { font-size:14px; font-weight:700; color:var(--text-muted); min-width:22px; }
 .ri-id { font-size:15px; font-family:Consolas,monospace; color:var(--text-primary); flex:1; }
-.ri-score { font-size:13px; font-weight:600; color:var(--accent); }
+.ri-score{font-size:13px;font-weight:600;color:var(--accent);font-family:'Orbitron','Consolas',monospace}
 .ri-empty { text-align:center; color:var(--text-muted); padding:24px; font-size:13px; }
 .ir-hot-section { margin-top:8px; border-top:1px solid rgba(56,189,248,0.08); padding-top:12px; }
 .hot-tags { display:flex; flex-wrap:wrap; gap:8px; padding-top:8px; }

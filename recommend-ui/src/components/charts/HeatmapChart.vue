@@ -82,7 +82,7 @@ function render() {
           .attr('dominant-baseline', 'middle')
           .attr('fill', val > maxV * 0.5 ? '#fff' : '#e2e8f0')
           .attr('font-size', '11').attr('font-weight', '700').attr('style', 'text-shadow:0 1px 3px rgba(0,0,0,0.8)')
-          .text(val > 9999 ? Math.round(val / 1000) + 'k' : val.toString())
+          .attr('class','on').text(val > 9999 ? Math.round(val / 1000) + 'k' : val.toString())
       }
 
       svg.append('title').text(`${h}:00 ${b.toUpperCase()} = ${val}`)
