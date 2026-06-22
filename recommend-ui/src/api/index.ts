@@ -37,8 +37,10 @@ export async function fetchHeatmap(date: string): Promise<HeatmapResponse> {
   return res.json()
 }
 
-export async function fetchCategoryTop(limit = 20): Promise<CategoryTopResponse> {
-  const res = await fetch(`${BASE}/analytics/category/top?limit=${limit}`)
+export async function fetchCategoryTop(limit = 20, date?: string): Promise<CategoryTopResponse> {
+  let url = `${BASE}/analytics/category/top?limit=${limit}`
+  if (date) url += '&date=' + date
+  const res = await fetch(url)
   if (!res.ok) throw new Error(`Category API error: ${res.status}`)
   return res.json()
 }

@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { fetchActivity } from '@/api'
 import * as d3 from 'd3'
+const props = defineProps<{ dateKey?: string }>()
 const svgRef=ref<SVGSVGElement|null>(null)
 var P=['#22c55e','#f59e0b','#f472b6']
 var loading=ref(true)
@@ -59,18 +60,19 @@ function buildTip(hd,hour,cx){
   hoverTip.selectAll('*').remove()
   if(!hd)return
   var lines=['Hour: '+hour+':00','Light: '+hd.light,'Medium: '+hd.medium,'Heavy: '+hd.heavy]
-  var tipW=250,tipH=110
-  var tx=cx-tipW/2,ty=yS(hd.light+hd.medium+hd.heavy)-tipH-8
-  if(tx<0)tx=4
-  if(tx+tipW>iw)tx=iw-tipW-4
-  if(ty<0)ty=yS(hd.light+hd.medium+hd.heavy)+12
-  hoverTip.append('rect').attr('x',tx).attr('y',ty).attr('width',tipW).attr('height',tipH).attr('rx',4)
-    .attr('fill','#0f172a').attr('stroke','rgba(56,189,248,0.25)').attr('stroke-width',1)
+  var cols=['#e2e8f0','#22c55e','#f59e0b','#f472b6']
+  var padX=14,padY=22,lineH=20
   lines.forEach(function(l,i){
-    hoverTip.append('text').attr('x',tx+16).attr('y',ty+22+i*20)
-      .attr('fill','#e2e8f0').attr('font-size','13')
-      .style('font-family',"'Orbitron','Consolas',monospace").text(l)
+    hoverTip.append('text').attr('class','tip-t').attr('fill',cols[i]).attr('font-size','13')
+      .style('font-family',"'Inter','PingFang SC','Microsoft YaHei',sans-serif").text(l)
   })
+  var maxW=0;hoverTip.selectAll('.tip-t').each(function(){var w=this.getComputedTextLength();if(w>maxW)maxW=w})
+  var tipW=Math.max(maxW+padX*2,100),tipH=(lines.length-1)*lineH+padY+18
+  var tx=cx-tipW/2,ty=yS(hd.light+hd.medium+hd.heavy)-tipH-8
+  if(tx<0)tx=4;if(tx+tipW>iw)tx=iw-tipW-4;if(ty<0)ty=yS(hd.light+hd.medium+hd.heavy)+12
+  hoverTip.selectAll('.tip-t').attr('x',tx+padX).attr('y',function(_,i){return ty+padY+i*lineH})
+  hoverTip.insert('rect','.tip-t').attr('x',tx).attr('y',ty).attr('width',tipW).attr('height',tipH).attr('rx',6)
+    .attr('fill','#0f172a').attr('stroke','rgba(56,189,248,0.45)').attr('stroke-width',1.5)
 }
 
 g.append('rect')
@@ -117,7 +119,7 @@ for(var x=0;x<=23;x+=4){g.append('text').attr('x',xS(x)).attr('y',ih+18).attr('t
 var yT=5;for(var y=0;y<=yT;y++){g.append('text').attr('x',-8).attr('y',yS(y*yMax*1.05/yT)+4).attr('text-anchor','end').attr('fill','#64748b').attr('font-size','9').style('font-family',"'Orbitron',monospace").text(Math.round(y*yMax*1.05/yT))}
 }
 async function loadData(){
-var now=new Date();var t=now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')
+var now=new Date();var t=props.dateKey||(now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0'))
 var ps=[];for(var h=0;h<24;h++){ps.push(fetchActivity(t+String(h).padStart(2,'0')).catch(function(){return{buckets:[]}}))}
 var rs=await Promise.all(ps)
 data.value=rs.map(function(r,i){var light=0,medium=0,heavy=0;if(r&&r.buckets){r.buckets.forEach(function(b){if(b.label.indexOf('light')===0)light=b.count;else if(b.label.indexOf('medium')===0)medium=b.count;else heavy=b.count})};return{hour:i,light:light,medium:medium,heavy:heavy}});loading.value=false;render()

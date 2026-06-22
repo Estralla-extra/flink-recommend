@@ -3,3 +3,8 @@ server:
 spring:
   application:
     name: recommend-web
+  datasource:
+    url: jdbc:mysql://192.168.249.102:3306/flink_recommend?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: recommend_app
+    password: Recommend@2026
+    driver-class-name: com.mysql.cj.jdbc.Driver

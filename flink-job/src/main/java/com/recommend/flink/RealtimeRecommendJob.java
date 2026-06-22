@@ -119,8 +119,11 @@ public class RealtimeRecommendJob {
                     if (parts.length >= 5) {
                         String dt = new java.text.SimpleDateFormat("yyyyMMdd").format(new java.util.Date());
                         jedis.incr("counter:events:" + dt);
+                    jedis.expire("counter:events:" + dt, 604800);
                         jedis.hincrBy("counter:behavior:" + dt, parts[3], 1);
+                    jedis.expire("counter:behavior:" + dt, 604800);
                         jedis.pfadd("counter:users:" + dt, parts[0]);
+                    jedis.expire("counter:users:" + dt, 604800);
                     }
                 }
             }
@@ -190,9 +193,11 @@ public class RealtimeRecommendJob {
         @Override
         public void apply(String categoryId, TimeWindow window, Iterable<UserAction> input, Collector<String> out) {
             int count = 0; for (UserAction a : input) { count++; }
+            String dateKey = toDateKey(window.getEnd());
             try (Jedis jedis = pool.getResource()) {
-                jedis.zincrby("category:hot", count, categoryId);
-                jedis.zremrangeByRank("category:hot", 0, -101);
+                jedis.zincrby("category:hot:" + dateKey, count, categoryId);
+                jedis.expire("category:hot:" + dateKey, 604800);
+                jedis.zremrangeByRank("category:hot:" + dateKey, 0, -101);
             }
         }
     }
@@ -210,15 +215,18 @@ public class RealtimeRecommendJob {
             try (Jedis jedis = pool.getResource()) {
                 for (Map.Entry<String, Integer> e : behaviorCount.entrySet()) {
                     jedis.hincrBy("funnel:" + first.hourKey, e.getKey(), e.getValue());
+                    jedis.expire("funnel:" + first.hourKey, 259200);
                 }
                 for (Map.Entry<String, Integer> e : behaviorCount.entrySet()) {
                     jedis.hincrBy("heatmap:" + first.dateKey, first.hourOfDay + "_" + e.getKey(), e.getValue());
+                jedis.expire("heatmap:" + first.dateKey, 604800);
                 }
                 String actKey = "user:activity:" + first.hourKey;
                 String oldVal = jedis.hget(actKey, first.userId);
                 int prev = (oldVal != null && !oldVal.isEmpty()) ? Integer.parseInt(oldVal) : 0;
                 int totalEvents = behaviorCount.values().stream().mapToInt(Integer::intValue).sum();
                 jedis.hset(actKey, first.userId, String.valueOf(prev + totalEvents));
+                jedis.expire(actKey, 259200);
             }
         }
     }
