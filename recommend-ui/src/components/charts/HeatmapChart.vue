@@ -14,7 +14,7 @@ function render() {
 
   const width = el.clientWidth
   const height = el.clientHeight
-  const margin = { t: 32, b: 28, l: 36, r: 8 }
+  const margin = { t: 80, b: 28, l: 36, r: 8 }
 
   const hours = props.data.map(d => d.hour)
   const behaviors = ['pv', 'cart', 'fav', 'buy']
@@ -82,10 +82,8 @@ function render() {
           .attr('dominant-baseline', 'middle')
           .attr('fill', val > maxV * 0.5 ? '#fff' : '#e2e8f0')
           .attr('font-size', '11').attr('font-weight', '700').attr('style', 'text-shadow:0 1px 3px rgba(0,0,0,0.8)')
-          .attr('class','on').text(val > 9999 ? Math.round(val / 1000) + 'k' : val.toString())
-      }
-
-      svg.append('title').text(`${h}:00 ${b.toUpperCase()} = ${val}`)
+          .attr('class','on').text(new Intl.NumberFormat().format(val))
+    }
     })
   })
 
@@ -100,14 +98,15 @@ function render() {
       .text(b.toUpperCase())
   })
 
-  // X axis labels (every hour)
+  // X axis labels (every 4th hour, like trend chart)
   hours.forEach((h, i) => {
+    if (i % 4 !== 0) return;
     svg.append('text')
       .attr('x', margin.l + i * cellW + cellW / 2)
       .attr('y', height - 4)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#64748b').attr('font-size', '7')
-      .text(`${h}:00`)
+      .attr('fill', '#64748b').attr('font-size', '9')
+      .style('font-family','Orbitron,Consolas,monospace').text(`${h}:00`)
   })
 }
 

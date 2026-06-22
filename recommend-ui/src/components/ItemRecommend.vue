@@ -76,7 +76,7 @@ async function search() {
 .ir-card { width:100%; max-width:700px; background:rgba(16,22,36,0.7); border:1px solid rgba(56,189,248,0.12); border-radius:12px; padding:24px; display:flex; flex-direction:column; gap:8px; box-shadow:0 4px 24px rgba(0,0,0,0.3); }
 .ir-card-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.08); }
 .ir-card-title { font-size:15px; font-weight:600; color:var(--text-primary); }
-.ir-card-flag { font-size:11px; padding:2px 10px; border-radius:4px; font-weight:600; }
+.ir-card-flag { font-size:12px; padding:3px 12px; border-radius:4px; font-weight:500; letter-spacing:0.5px; }
 .ir-card-flag.on { background:rgba(52,211,153,0.12); color:var(--success); }
 .ir-card-flag.off { background:rgba(100,116,139,0.1); color:var(--text-muted); }
 .ir-card-flag.warn { background:rgba(251,191,36,0.12); color:var(--warning); }
