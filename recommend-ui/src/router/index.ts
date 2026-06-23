@@ -33,12 +33,12 @@ const routes = [
   {
     path: '/analytics',
     name: 'Analytics',
-    component: () => import('@/views/Analytics.vue'),
+  component: () => import('@/views/Analytics.vue'),
   },
 ]
 
  const router = createRouter({
-    history: createWebHashHistory(),
+   history: createWebHashHistory(),
   routes,
 })
 

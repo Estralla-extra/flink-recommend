@@ -25,3 +25,21 @@ export interface RealtimeMetrics {
   qps: number
   conversion_rate: number
 }
+ 
+ export interface UserProfile {
+   id: number
+   username: string
+   name: string
+   avatar?: string
+   email?: string
+   createdAt?: string
+ }
+ 
+ export interface LoginResponse {
+   token: string
+   user: { id: number; username: string; name: string }
+ }
+ 
+ export interface AuthErrorResponse {
+   error: string
+ }

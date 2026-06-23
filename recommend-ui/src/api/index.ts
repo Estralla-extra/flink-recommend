@@ -1,6 +1,7 @@
 import type {
   RecommendResponse, SystemMetricsResponse,
   FunnelResponse, HeatmapResponse, CategoryTopResponse, ActivityResponse,
+  UserProfile, LoginResponse,
 } from '@/types'
 
 const BASE = '/api'
@@ -56,3 +57,54 @@ export async function fetchRealtime(): Promise<import('@/types').RealtimeMetrics
   if (!res.ok) throw new Error('Realtime API error: ' + res.status)
   return res.json()
 }
+ 
+ // ===== Auth API =====
+ 
+ export async function loginApi(username: string, password: string): Promise<LoginResponse> {
+   const res = await fetch('/api/auth/login', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ username, password }),
+   })
+   if (!res.ok) {
+     const err = await res.json().catch(() => ({ error: '登录失败' }))
+     throw new Error(err.error || '登录失败')
+   }
+   return res.json()
+ }
+ 
+ export async function registerApi(username: string, password: string): Promise<void> {
+   const res = await fetch('/api/auth/register', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ username, password }),
+   })
+   if (!res.ok) {
+     const err = await res.json().catch(() => ({ error: '注册失败' }))
+     throw new Error(err.error || '注册失败')
+   }
+ }
+ 
+ export async function fetchUserProfile(): Promise<UserProfile> {
+   const token = localStorage.getItem('token')
+   const res = await fetch('/api/auth/me', {
+     headers: { 'Authorization': token || '' },
+   })
+   if (!res.ok) {
+     if (res.status === 401) {
+       localStorage.removeItem('token')
+       localStorage.removeItem('user')
+       window.location.hash = '#/login'
+     }
+     throw new Error('获取用户信息失败')
+   }
+   return res.json()
+ }
+ 
+ export async function logoutApi(): Promise<void> {
+   const token = localStorage.getItem('token')
+   await fetch('/api/auth/logout', {
+     method: 'POST',
+     headers: { 'Authorization': token || '' },
+   })
+ }
