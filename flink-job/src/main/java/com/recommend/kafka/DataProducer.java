@@ -11,6 +11,16 @@ import java.util.Properties;
 
 public class DataProducer {
     public static void main(String[] args) throws Exception {
+        // CSV 路径：优先从命令行参数读取，否则使用默认路径
+        String csvFile;
+        if (args.length > 0) {
+            csvFile = args[0];
+        } else {
+            csvFile = "D:\\桌面\\fsdownload\\mini_behavior.csv";
+            System.out.println("未指定路径，使用默认: " + csvFile);
+        }
+        System.out.println("数据文件: " + csvFile);
+
         // 1. Kafka 生产者配置
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "hadoop102:9092,hadoop103:9092");
@@ -21,9 +31,6 @@ public class DataProducer {
         // 2. 创建 Kafka 生产者
         KafkaProducer<String, String> producer = new KafkaProducer<>(props);
         String topic = "user_behavior";
-
-        // 3. 读取 CSV 文件(请改成你的 mini_behavior.csv 实际路径)
-        String csvFile = "D:\\桌面\\fsdownload\\mini_behavior.csv";
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String line;

@@ -34,11 +34,8 @@ public class RealtimeRecommendJob {
             "1535294", "3122135", "2331370", "3031354", "4091349"
     );
 
-    public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();
-        conf.setString("rest.port", "8081");
-        conf.setString("rest.bind-address", "0.0.0.0");
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
+        public static void main(String[] args) throws Exception {
+            StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(2);
 
         Properties props = new Properties();
@@ -125,6 +122,8 @@ public class RealtimeRecommendJob {
                         jedis.pfadd("counter:users:" + dt, parts[0]);
                     jedis.expire("counter:users:" + dt, 604800);
                     }
+                } catch (Exception e) {
+                    System.err.println("Redis write error (ignored): " + e.getMessage());
                 }
             }
             try {
@@ -198,6 +197,8 @@ public class RealtimeRecommendJob {
                 jedis.zincrby("category:hot:" + dateKey, count, categoryId);
                 jedis.expire("category:hot:" + dateKey, 604800);
                 jedis.zremrangeByRank("category:hot:" + dateKey, 0, -101);
+            } catch (Exception e) {
+                System.err.println("CategoryHot Redis error: " + e.getMessage());
             }
         }
     }

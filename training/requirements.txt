@@ -1,0 +1,15 @@
+pandas
+gensim
+redis
+ 
+ # PySpark ALS
+ pyspark
+ 
+ # FAISS GPU
+faiss-cpu
+ 
+ # Redis
+ redis
+ 
+ # Parquet (pandas + pyarrow)
+ pyarrow

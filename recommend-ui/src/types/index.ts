@@ -2,7 +2,7 @@ export interface RecommendItem { itemId: string; score: number }
 export interface RecommendSources { flink: boolean; realtime: boolean; hot: boolean; current_item: string }
 export interface RecommendResponse { user_id: string; recommendations: RecommendItem[]; sources: RecommendSources; timestamp: number }
 export interface KafkaMetrics { tps_in: number; tps_out: number; lag: number[] }
-export interface FlinkMetrics { window_time: number; redis_time: number }
+export interface FlinkMetrics { window_time: number; redis_time: number; kafka_rate?: number; window_agg?: number; hourly_stats?: number; recommend_out?: number; busy_time?: number }
 export interface RedisMetrics { hit_rate: string; used_memory: string }
 export interface SystemMetricsResponse { kafka: KafkaMetrics; flink: FlinkMetrics; redis: RedisMetrics }
 

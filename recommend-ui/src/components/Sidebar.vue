@@ -25,7 +25,7 @@ const health = computed(() => [
   },
   {
     label: 'Flink', icon: 'cpu',
-    ok: metricsStore.flink.window_time > 0,
+    ok: metricsStore.flink?.window_time > 0,
     detail: metricsStore.flink.window_time > 0 ? 'RUNNING' : 'DISCONNECTED',
     sub: metricsStore.flink.window_time > 0 ? `${metricsStore.flink.window_time}ms` : '部署集群后连接',
   },
