@@ -32,14 +32,14 @@ def read_parquet(path, local):
 
 
 def write_parquet(df, path, local):
+    import subprocess, os
+    local_path = "/tmp/item2vec/sim_results.parquet"
+    os.makedirs("/tmp/item2vec", exist_ok=True)
+    df.to_parquet(local_path)
     if local:
-        df.to_parquet(path)
+        os.rename(local_path, path)
     else:
-        from pyspark.sql import SparkSession
-        spark = SparkSession.builder.appName("WriteParquet").getOrCreate()
-        sdf = spark.createDataFrame(df)
-        sdf.write.mode("overwrite").parquet(path)
-        spark.stop()
+        subprocess.run(["hadoop", "fs", "-put", "-f", local_path, path], check=False)
 
 
 def main():

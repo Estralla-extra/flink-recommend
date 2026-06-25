@@ -3,7 +3,7 @@ PySpark ALS 训练 — 替代 Word2Vec 方案
 
 用法 (集群):
   spark-submit --master yarn train_als.py \
-    --input hdfs:///flink—recommend/datas/UserBehavior.csv \
+    --input hdfs:///flink-recommend/datas/UserBehavior.csv \
     --output hdfs:///item2vec/output
 
 输出:
@@ -19,11 +19,11 @@ from pyspark.sql.types import IntegerType
 from pyspark.sql.window import Window
 from pyspark.ml.recommendation import ALS
 
-HDFS_INPUT = "hdfs:///flink—recommend/datas/UserBehavior.csv"
+HDFS_INPUT = "hdfs:///flink-recommend/datas/train_20m.csv"
 HDFS_OUTPUT = "hdfs:///item2vec/output"
 MIN_COUNT = 2
-ALS_RANK = 128
-ALS_EPOCHS = 15
+ALS_RANK = 64
+ALS_EPOCHS = 10
 ALS_REG = 0.01
 ALS_ALPHA = 40.0
 SHUFFLE_PARTITIONS = 200
@@ -44,9 +44,6 @@ def main():
     if args.local:
         conf.set("spark.sql.shuffle.partitions", "20")
     else:
-        conf.set("spark.yarn.dist.archives", "hdfs:///flink—recommend/.venv.tar.gz#.venv")
-        conf.set("spark.pyspark.python", "./.venv/bin/python")
-        conf.set("spark.pyspark.driver.python", "./.venv/bin/python")
         conf.set("spark.sql.shuffle.partitions", str(SHUFFLE_PARTITIONS))
     spark = SparkSession.builder.config(conf=conf).getOrCreate()
 
@@ -106,6 +103,15 @@ def main():
 
     print("\nStage 7: 保存结果...")
     item_factors.write.mode("overwrite").parquet(f"{args.output}/item_factors")
+    elapsed = time.time() - t0
+    print(f"\n训练完成! 总耗时 {elapsed:.1f}s")
+    print(f"输出: {args.output}/")
+    spark.stop()
+
+
+if __name__ == "__main__":
+    main()
+e("overwrite").parquet(f"{args.output}/item_factors")
     elapsed = time.time() - t0
     print(f"\n训练完成! 总耗时 {elapsed:.1f}s")
     print(f"输出: {args.output}/")
